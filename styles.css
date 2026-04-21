@@ -216,6 +216,32 @@ input, textarea { font-family: var(--font-mono); }
 
 .date-card--has-entries .date-card__dot { opacity: 1; }
 
+/* Empty-day cards — no entries logged */
+.date-card:not(.date-card--has-entries):not(.date-card--selected):not(.date-card--today) {
+  background: repeating-linear-gradient(
+    -45deg,
+    #ece9e1,
+    #ece9e1 3px,
+    var(--surface) 3px,
+    var(--surface) 10px
+  );
+  color: #999;
+  border-color: #bbb;
+  box-shadow: 2px 2px 0 #bbb;
+}
+.date-card:not(.date-card--has-entries):not(.date-card--selected):not(.date-card--today) .date-card__day {
+  opacity: 0.45;
+}
+.date-card:not(.date-card--has-entries):not(.date-card--selected):not(.date-card--today):hover {
+  border-color: var(--black);
+  color: var(--black);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.date-card:not(.date-card--has-entries):not(.date-card--selected):not(.date-card--today):hover .date-card__day {
+  opacity: 0.6;
+}
+
 /* Selected state */
 .date-card--selected {
   background: var(--black);
@@ -876,32 +902,6 @@ input, textarea { font-family: var(--font-mono); }
     justify-content: center;
   }
   .calendar-strip { min-width: unset; justify-content: center; flex-wrap: wrap; }
-
-  /* Empty-day cards get a muted striped look on desktop only */
-  .date-card:not(.date-card--has-entries):not(.date-card--selected):not(.date-card--today) {
-    background: repeating-linear-gradient(
-      -45deg,
-      #ece9e1,
-      #ece9e1 3px,
-      var(--surface) 3px,
-      var(--surface) 10px
-    );
-    color: #999;
-    border-color: #bbb;
-    box-shadow: 2px 2px 0 #bbb;
-  }
-  .date-card:not(.date-card--has-entries):not(.date-card--selected):not(.date-card--today) .date-card__day {
-    opacity: 0.45;
-  }
-  .date-card:not(.date-card--has-entries):not(.date-card--selected):not(.date-card--today):hover {
-    border-color: var(--black);
-    color: var(--black);
-    background: var(--surface);
-    box-shadow: var(--shadow);
-  }
-  .date-card:not(.date-card--has-entries):not(.date-card--selected):not(.date-card--today):hover .date-card__day {
-    opacity: 0.6;
-  }
 
   .entries-section { padding: 24px 32px 120px; max-width: 900px; margin: 0 auto; }
   .date-card { width: 60px; height: 76px; }
