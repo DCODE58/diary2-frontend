@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BRUTELOG — Daily Diary</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ══════════ HEADER ══════════ -->
+  <header class="app-header">
+    <div class="header-left">
+      <span class="header-logo">BRUTELOG</span>
+      <span class="header-tagline">// DAILY ENTRIES</span>
+    </div>
+    <div class="header-right">
+      <div class="today-badge" id="todayBadge"></div>
+    </div>
+  </header>
+
+  <!-- ══════════ CALENDAR STRIP ══════════ -->
+  <section class="calendar-section">
+    <div class="calendar-nav">
+      <button class="nav-btn" id="prevWeek" aria-label="Previous week">◀</button>
+      <span class="month-label" id="monthLabel">JANUARY 2025</span>
+      <button class="nav-btn" id="nextWeek" aria-label="Next week">▶</button>
+    </div>
+    <div class="calendar-strip-wrapper">
+      <div class="calendar-strip" id="calendarStrip" role="listbox" aria-label="Date selector"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ ENTRIES SECTION ══════════ -->
+  <main class="entries-section">
+    <div class="entries-header">
+      <h2 class="selected-date-label" id="selectedDateLabel">TODAY</h2>
+      <span class="entry-count" id="entryCount">0 ENTRIES</span>
+    </div>
+
+    <!-- Loading State -->
+    <div class="state-loading" id="loadingState" hidden>
+      <div class="loading-blocks">
+        <div class="loading-block"></div>
+        <div class="loading-block"></div>
+        <div class="loading-block"></div>
+      </div>
+      <p>LOADING...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div class="state-empty" id="emptyState" hidden>
+      <div class="empty-icon">✕</div>
+      <p class="empty-title">NO ENTRIES</p>
+      <p class="empty-sub">NOTHING LOGGED FOR THIS DATE.</p>
+      <button class="btn-empty-add" id="emptyAddBtn">+ ADD FIRST ENTRY</button>
+    </div>
+
+    <!-- Error State -->
+    <div class="state-error" id="errorState" hidden>
+      <div class="error-icon">⚠</div>
+      <p class="error-title">CONNECTION ERROR</p>
+      <p class="error-sub" id="errorMessage">COULD NOT REACH SERVER.</p>
+      <button class="btn-retry" id="retryBtn">RETRY</button>
+    </div>
+
+    <!-- Entries List -->
+    <div class="entries-list" id="entriesList" role="list"></div>
+  </main>
+
+  <!-- ══════════ FAB ══════════ -->
+  <button class="fab" id="fabBtn" aria-label="Add new entry">
+    <span class="fab-icon">+</span>
+  </button>
+
+  <!-- ══════════ MODAL OVERLAY ══════════ -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">NEW ENTRY</h3>
+        <button class="modal-close" id="modalClose" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="entryTitle">TITLE *</label>
+          <input
+            class="form-input"
+            type="text"
+            id="entryTitle"
+            placeholder="WHAT HAPPENED?"
+            maxlength="120"
+            autocomplete="off"
+          />
+          <span class="form-error" id="titleError" hidden>TITLE IS REQUIRED.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="entryDesc">DESCRIPTION</label>
+          <textarea
+            class="form-input form-textarea"
+            id="entryDesc"
+            placeholder="DETAILS..."
+            rows="4"
+            maxlength="1000"
+          ></textarea>
+          <span class="char-count" id="charCount">0 / 1000</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group form-group--half">
+            <label class="form-label" for="entryDate">DATE *</label>
+            <input
+              class="form-input"
+              type="date"
+              id="entryDate"
+            />
+            <span class="form-error" id="dateError" hidden>DATE IS REQUIRED.</span>
+          </div>
+
+          <div class="form-group form-group--half">
+            <label class="form-label" for="entryTime">TIME *</label>
+            <input
+              class="form-input"
+              type="time"
+              id="entryTime"
+            />
+            <span class="form-error" id="timeError" hidden>TIME IS REQUIRED.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">CATEGORY</label>
+          <div class="category-pills" role="radiogroup" aria-label="Entry category">
+            <button class="pill" data-cat="PERSONAL" role="radio" aria-checked="true">PERSONAL</button>
+            <button class="pill" data-cat="WORK" role="radio" aria-checked="false">WORK</button>
+            <button class="pill" data-cat="IMPORTANT" role="radio" aria-checked="false">IMPORTANT</button>
+            <button class="pill" data-cat="HEALTH" role="radio" aria-checked="false">HEALTH</button>
+            <button class="pill" data-cat="SOCIAL" role="radio" aria-checked="false">SOCIAL</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" id="cancelBtn">CANCEL</button>
+        <button class="btn-submit" id="submitBtn">
+          <span id="submitLabel">LOG ENTRY</span>
+          <span id="submitSpinner" class="spinner" hidden>...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ TOAST ══════════ -->
+  <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
